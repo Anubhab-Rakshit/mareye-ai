@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { loadDetections } from "@/lib/detection-storage"
 import {
   Brain, Sparkles, TrendingUp, AlertTriangle,
@@ -174,6 +174,197 @@ export function AIThreatIntelligence({ threatStats }: {
     }
   }, [threatStats.totalDetections])
 
+  // Parse markdown text and convert to React elements
+  const parseMarkdown = (text: string): React.ReactNode[] => {
+    const parts: React.ReactNode[] = []
+    let currentIndex = 0
+    
+    // Regex to find **bold** text
+    const boldRegex = /\*\*([^*]+)\*\*/g
+    const lines = text.split('\n')
+    
+    lines.forEach((line, lineIndex) => {
+      const trimmed = line.trim()
+      if (!trimmed) {
+        parts.push(<br key={`br-${lineIndex}`} />)
+        return
+      }
+      
+      // Check if it's a section header (starts with ** and ends with ** or has colon)
+      if (trimmed.match(/^\*\*.*\*\*:?$/) || trimmed.match(/^\d+\.\s+\*\*.*\*\*:?$/)) {
+        const title = trimmed.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').replace(/:$/, '')
+        parts.push(
+          <h4 key={`header-${lineIndex}`} className="text-emerald-400 font-bold text-base uppercase tracking-wide mt-4 mb-2 first:mt-0">
+            {title}
+          </h4>
+        )
+        return
+      }
+      
+      // Check if it's a bullet point
+      if (trimmed.startsWith('-') || trimmed.startsWith('*') || trimmed.match(/^[\d•]/)) {
+        const bulletText = trimmed.replace(/^[-*•\d.\s]+/, '').trim()
+        const bulletContent = parseInlineMarkdown(bulletText)
+        
+        parts.push(
+          <div key={`bullet-${lineIndex}`} className="flex items-start gap-3 my-2">
+            <span className="text-emerald-400 font-bold mt-1 flex-shrink-0">▸</span>
+            <div className="text-gray-300 text-sm leading-relaxed flex-1">
+              {bulletContent}
+            </div>
+          </div>
+        )
+        return
+      }
+      
+      // Regular paragraph
+      const paragraphContent = parseInlineMarkdown(trimmed)
+      parts.push(
+        <p key={`para-${lineIndex}`} className="text-gray-300 text-sm leading-relaxed my-2">
+          {paragraphContent}
+        </p>
+      )
+    })
+    
+    return parts
+  }
+  
+  // Parse inline markdown (bold, percentages, etc.)
+  const parseInlineMarkdown = (text: string): React.ReactNode[] => {
+    const parts: React.ReactNode[] = []
+    let lastIndex = 0
+    let keyIndex = 0
+    
+    // Find all **bold** text (including nested or multiple instances)
+    const boldRegex = /\*\*([^*]+?)\*\*/g
+    let match
+    
+    while ((match = boldRegex.exec(text)) !== null) {
+      // Add text before the match
+      if (match.index > lastIndex) {
+        const beforeText = text.substring(lastIndex, match.index)
+        if (beforeText) {
+          // Also check for percentages/numbers in regular text
+          const numberMatch = beforeText.match(/(\d+%?)/g)
+          if (numberMatch) {
+            let textIndex = 0
+            numberMatch.forEach(num => {
+              const numIndex = beforeText.indexOf(num, textIndex)
+              if (numIndex > textIndex) {
+                parts.push(<span key={`text-${keyIndex++}`}>{beforeText.substring(textIndex, numIndex)}</span>)
+              }
+              parts.push(
+                <span key={`num-${keyIndex++}`} className="text-emerald-400 font-semibold">
+                  {num}
+                </span>
+              )
+              textIndex = numIndex + num.length
+            })
+            if (textIndex < beforeText.length) {
+              parts.push(<span key={`text-${keyIndex++}`}>{beforeText.substring(textIndex)}</span>)
+            }
+          } else {
+            parts.push(<span key={`text-${keyIndex++}`}>{beforeText}</span>)
+          }
+        }
+      }
+      
+      // Add bold text
+      const boldText = match[1].trim()
+      // Check if it's a percentage or number
+      if (boldText.match(/^\d+%?$/)) {
+        parts.push(
+          <span key={`bold-${keyIndex++}`} className="text-emerald-400 font-bold text-base">
+            {boldText}
+          </span>
+        )
+      } else if (boldText.match(/^(Critical|High|Medium|Low|Moderate|Stable|Increasing|Decreasing|INCREASING|DECREASING|STABLE)$/i)) {
+        const level = boldText.toLowerCase()
+        const colorClass = 
+          level.includes('critical') || level.includes('high') ? 'text-red-400' :
+          level.includes('medium') || level.includes('moderate') ? 'text-yellow-400' :
+          level.includes('low') || level.includes('stable') ? 'text-cyan-400' :
+          'text-emerald-400'
+        parts.push(
+          <span key={`bold-${keyIndex++}`} className={`${colorClass} font-bold`}>
+            {boldText}
+          </span>
+        )
+      } else if (boldText.match(/^\d+-\d+/) || boldText.match(/UTC|GMT|hours?|days?/i)) {
+        // Time ranges or dates
+        parts.push(
+          <span key={`bold-${keyIndex++}`} className="text-cyan-400 font-semibold">
+            {boldText}
+          </span>
+        )
+      } else {
+        parts.push(
+          <span key={`bold-${keyIndex++}`} className="text-emerald-300 font-semibold">
+            {boldText}
+          </span>
+        )
+      }
+      
+      lastIndex = match.index + match[0].length
+    }
+    
+    // Add remaining text
+    if (lastIndex < text.length) {
+      const remainingText = text.substring(lastIndex)
+      if (remainingText) {
+        // Check for percentages/numbers in remaining text
+        const numberMatch = remainingText.match(/(\d+%?)/g)
+        if (numberMatch) {
+          let textIndex = 0
+          numberMatch.forEach(num => {
+            const numIndex = remainingText.indexOf(num, textIndex)
+            if (numIndex > textIndex) {
+              parts.push(<span key={`text-${keyIndex++}`}>{remainingText.substring(textIndex, numIndex)}</span>)
+            }
+            parts.push(
+              <span key={`num-${keyIndex++}`} className="text-emerald-400 font-semibold">
+                {num}
+              </span>
+            )
+            textIndex = numIndex + num.length
+          })
+          if (textIndex < remainingText.length) {
+            parts.push(<span key={`text-${keyIndex++}`}>{remainingText.substring(textIndex)}</span>)
+          }
+        } else {
+          parts.push(<span key={`text-${keyIndex++}`}>{remainingText}</span>)
+        }
+      }
+    }
+    
+    // If no bold text found, check for numbers/percentages
+    if (parts.length === 0) {
+      const numberMatch = text.match(/(\d+%?)/g)
+      if (numberMatch) {
+        let textIndex = 0
+        numberMatch.forEach(num => {
+          const numIndex = text.indexOf(num, textIndex)
+          if (numIndex > textIndex) {
+            parts.push(<span key={`text-${keyIndex++}`}>{text.substring(textIndex, numIndex)}</span>)
+          }
+          parts.push(
+            <span key={`num-${keyIndex++}`} className="text-emerald-400 font-semibold">
+              {num}
+            </span>
+          )
+          textIndex = numIndex + num.length
+        })
+        if (textIndex < text.length) {
+          parts.push(<span key={`text-${keyIndex++}`}>{text.substring(textIndex)}</span>)
+        }
+      } else {
+        return [<span key="text-0">{text}</span>]
+      }
+    }
+    
+    return parts
+  }
+  
   const formatResponse = (text: string) => {
     // Split by sections (lines starting with ** or numbers)
     const lines = text.split('\n')
@@ -182,12 +373,10 @@ export function AIThreatIntelligence({ threatStats }: {
 
     lines.forEach(line => {
       const trimmed = line.trim()
-      if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+      if (trimmed.match(/^\*\*.*\*\*:?$/) || trimmed.match(/^\d+\.\s+\*\*.*\*\*:?$/)) {
         if (currentSection) sections.push(currentSection)
-        currentSection = { title: trimmed.replace(/\*\*/g, ''), content: [] }
-      } else if (trimmed.match(/^\d+\.\s+\*\*/)) {
-        if (currentSection) sections.push(currentSection)
-        currentSection = { title: trimmed.replace(/^\d+\.\s+\*\*/g, '').replace(/\*\*/g, ''), content: [] }
+        const title = trimmed.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').replace(/:$/, '')
+        currentSection = { title, content: [] }
       } else if (trimmed) {
         if (currentSection) {
           currentSection.content.push(trimmed)
@@ -269,32 +458,13 @@ export function AIThreatIntelligence({ threatStats }: {
                   <span className="ml-2 text-emerald-300">Analyzing threats...</span>
                 </div>
               ) : response ? (
-                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-                  {sections.map((section, idx) => (
-                    <div key={idx} className="space-y-2">
-                      {section.title && (
-                        <h4 className="text-emerald-400 font-semibold text-sm uppercase tracking-wide">
-                          {section.title}
-                        </h4>
-                      )}
-                      <div className="text-gray-300 text-sm leading-relaxed space-y-1">
-                        {section.content.map((line, lineIdx) => {
-                          if (line.startsWith('-') || line.match(/^[\d•]/)) {
-                            return (
-                              <div key={lineIdx} className="flex items-start gap-2 ml-2">
-                                <span className="text-emerald-400 mt-1">•</span>
-                                <span>{line.replace(/^[-•\d.\s]+/, '')}</span>
-                              </div>
-                            )
-                          }
-                          return <p key={lineIdx} className="ml-2">{line}</p>
-                        })}
-                      </div>
-                    </div>
-                  ))}
+                <div className="space-y-2 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-emerald-500/30 scrollbar-track-slate-800/50 hover:scrollbar-thumb-emerald-500/50">
+                  <div className="space-y-1">
+                    {parseMarkdown(response.response)}
+                  </div>
                   {response.timestamp && (
-                    <div className="text-xs text-gray-500 pt-2 border-t border-emerald-500/20">
-                      Generated: {new Date(response.timestamp).toLocaleString()}
+                    <div className="text-xs text-gray-500 pt-4 mt-4 border-t border-emerald-500/20">
+                      <span className="text-emerald-400/60">Generated:</span> {new Date(response.timestamp).toLocaleString()}
                     </div>
                   )}
                 </div>
@@ -470,16 +640,16 @@ export function AIThreatIntelligence({ threatStats }: {
               {queryResponse && (
                 <Card className="bg-emerald-500/10 border-emerald-500/30 p-4 mt-4">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-3">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       <span className="text-sm font-semibold text-emerald-300">AI Response</span>
                     </div>
-                    <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
-                      {queryResponse.response}
+                    <div className="text-sm text-gray-300 leading-relaxed space-y-1">
+                      {parseMarkdown(queryResponse.response)}
                     </div>
                     {queryResponse.timestamp && (
-                      <div className="text-xs text-gray-500 pt-2 border-t border-emerald-500/20">
-                        Generated: {new Date(queryResponse.timestamp).toLocaleString()}
+                      <div className="text-xs text-gray-500 pt-4 mt-4 border-t border-emerald-500/20">
+                        <span className="text-emerald-400/60">Generated:</span> {new Date(queryResponse.timestamp).toLocaleString()}
                       </div>
                     )}
                   </div>
