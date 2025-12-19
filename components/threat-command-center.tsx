@@ -16,6 +16,7 @@ import {
 import { SonarGridBackground } from "@/components/sonar-grid-background"
 import { AnimatedCounter } from "@/components/animated-counter"
 import { loadDetections, getThreatStats, getAllThreatObjects } from "@/lib/detection-storage"
+import { AIThreatIntelligence } from "@/components/ai-threat-intelligence"
 
 interface ThreatAlert {
   id: string
@@ -1483,6 +1484,13 @@ export function ThreatCommandCenter() {
               {/* Threat Heatmap by Class */}
               <ThreatHeatmap />
             </div>
+          </div>
+
+          {/* AI Threat Intelligence Section */}
+          <div className="mt-12">
+            <AIThreatIntelligence 
+              threatStats={threatStats}
+            />
           </div>
         </div>
       </div>
