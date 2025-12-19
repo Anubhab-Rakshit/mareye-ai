@@ -1,0 +1,13 @@
+# MAR EYE Jetson Requirements
+# Core dependencies
+numpy>=1.21.0
+opencv-python>=4.5.0
+Pillow>=8.0.0
+onnxruntime>=1.12.0
+
+# Optional GPU acceleration (choose based on your Jetson setup)
+# onnxruntime-gpu>=1.12.0  # For CUDA acceleration
+# tensorrt>=8.0.0  # For TensorRT optimization (usually pre-installed)
+
+# For video processing
+# opencv-contrib-python>=4.5.0  # Uncomment for additional OpenCV features

@@ -1,0 +1,7 @@
+path: /content/combined_dataset
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 5
+names: ['Mines - v1 2025-05-15 8-03pm', 'Submarine', 'auv-rov', 'divers', 'mayin']

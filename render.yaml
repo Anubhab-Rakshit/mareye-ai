@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: mareye-marine-security
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NEXT_PUBLIC_BASE_URL
+        value: "https://mareye-marine-security.onrender.com" # Update with your actual Render URL after deployment
+      - key: MONGODB_URI
+        value: "mongodb://127.0.0.1:27017/mareye" # Update with your MongoDB connection string
+      - key: JWT_SECRET
+        value: "change-this-to-a-secure-random-string-in-production"
+      - key: PYTHON_EXEC
+        value: "python3"
+      - key: EMAIL_DISABLE
+        value: "true" # Set to false and configure SMTP if you want email OTP
+    healthCheckPath: /api/health
+    autoDeploy: true
+    branch: main

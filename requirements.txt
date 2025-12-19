@@ -1,0 +1,14 @@
+# Python dependencies for ML processing
+# Using CPU-only torch for smaller image size on Render
+torch>=2.0.0,<3.0.0
+torchvision>=0.15.0,<1.0.0
+ultralytics>=8.0.0
+opencv-python-headless>=4.5.0
+numpy>=1.21.0,<2.0.0
+Pillow>=8.3.0
+flask>=2.0.0
+
+# Note: Ensure torch and torchvision versions are compatible
+# For torch 2.9+, use torchvision 0.24+
+
+

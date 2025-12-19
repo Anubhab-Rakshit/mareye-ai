@@ -1,0 +1,276 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space_Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Tactical Oceanic color palette with deep navy and bioluminescent cyan */
+  --background: 5 30% 10%; /* #0A1628 - Deep ocean navy */
+  --foreground: 0 0% 100%; /* White text */
+  --card: 210 40% 12%; /* #0D1B2A - Slightly lighter navy for cards */
+  --card-foreground: 0 0% 100%; /* White text on cards */
+  --popover: 210 40% 12%; /* Ocean blue popover */
+  --popover-foreground: 0 0% 100%; /* White text */
+  --primary: 180 100% 50%; /* Bright cyan - bioluminescent accent */
+  --primary-foreground: 210 50% 10%; /* Dark text on primary */
+  --secondary: 210 70% 15%; /* #1B263B - Secondary navy */
+  --secondary-foreground: 0 0% 100%; /* White text */
+  --muted: 210 40% 25%; /* Muted navy */
+  --muted-foreground: 0 0% 70%; /* Light gray text */
+  --accent: 180 100% 40%; /* Neon cyan accent */
+  --accent-foreground: 0 0% 100%; /* White on accent */
+  --destructive: 0 84% 60%; /* Red for warnings */
+  --destructive-foreground: 0 0% 100%; /* White on destructive */
+  --border: 210 50% 20%; /* Navy borders with slight transparency */
+  --input: 210 40% 15%; /* Navy input backgrounds */
+  --ring: 180 100% 50%; /* Cyan focus rings */
+  --chart-1: 180 100% 50%; /* Bright cyan */
+  --chart-2: 210 80% 55%; /* Light blue */
+  --chart-3: 180 70% 45%; /* Teal */
+  --chart-4: 200 60% 40%; /* Deeper blue */
+  --chart-5: 120 100% 50%; /* Bright green */
+  --radius: 0.75rem;
+  --sidebar: 210 50% 10%; /* Very dark navy sidebar */
+  --sidebar-foreground: 0 0% 100%; /* White sidebar text */
+  --sidebar-primary: 180 100% 50%; /* Cyan primary */
+  --sidebar-primary-foreground: 0 0% 100%; /* White text */
+  --sidebar-accent: 210 40% 20%; /* Navy accent */
+  --sidebar-accent-foreground: 180 100% 50%; /* Cyan text */
+  --sidebar-border: 210 50% 25%; /* Navy borders */
+  --sidebar-ring: 180 100% 50%; /* Cyan rings */
+}
+
+.dark {
+  /* Enhanced dark mode for tactical oceanic aesthetic */
+  --background: 210 50% 8%; /* Even deeper navy in dark mode */
+  --foreground: 0 0% 100%; /* White text */
+  --card: 210 40% 12%; /* Deep navy cards */
+  --card-foreground: 0 0% 100%; /* White card text */
+  --popover: 210 40% 12%; /* Deep ocean popovers */
+  --popover-foreground: 0 0% 100%; /* White popover text */
+  --primary: 180 100% 50%; /* Bright bioluminescent cyan */
+  --primary-foreground: 0 0% 100%; /* White text on primary */
+  --secondary: 210 70% 18%; /* Darker navy secondary */
+  --secondary-foreground: 0 0% 100%; /* White secondary text */
+  --muted: 210 40% 20%; /* Muted navy */
+  --muted-foreground: 0 0% 60%; /* Gray muted text */
+  --accent: 180 100% 45%; /* Bright cyan accent */
+  --accent-foreground: 0 0% 100%; /* White accent text */
+  --destructive: 0 84% 65%; /* Brighter red */
+  --destructive-foreground: 0 0% 100%; /* White destructive text */
+  --border: 210 50% 22%; /* Navy borders */
+  --input: 210 40% 15%; /* Deep navy inputs */
+  --ring: 180 100% 50%; /* Bright cyan focus rings */
+  --chart-1: 180 100% 50%; /* Bright cyan chart */
+  --chart-2: 210 80% 55%; /* Light blue chart */
+  --chart-3: 180 70% 50%; /* Bright teal chart */
+  --chart-4: 200 60% 45%; /* Bright deep blue chart */
+  --chart-5: 120 100% 55%; /* Bright green chart */
+  --sidebar: 210 50% 8%; /* Very dark sidebar */
+  --sidebar-foreground: 0 0% 100%; /* White sidebar text */
+  --sidebar-primary: 180 100% 50%; /* Bright cyan primary */
+  --sidebar-primary-foreground: 0 0% 100%; /* White text */
+  --sidebar-accent: 210 40% 22%; /* Navy accent */
+  --sidebar-accent-foreground: 180 100% 50%; /* Cyan text */
+  --sidebar-border: 210 50% 25%; /* Navy borders */
+  --sidebar-ring: 180 100% 50%; /* Bright cyan rings */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+    /* Add tactical sonar pulse animation base */
+    position: relative;
+  }
+
+  /* Typography hierarchy with tactical fonts */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-orbitron font-bold tracking-widest;
+  }
+
+  /* Radar sweep animation */
+  @keyframes radar-sweep {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  
+  /* Scan line animation */
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+  
+  /* Shimmer animation */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* Gradient animation */
+  @keyframes animate-gradient {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  /* Sonar pulse keyframe for ambient animations */
+  @keyframes sonar-pulse {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
+  /* Glitch text animation for tactical feel */
+  @keyframes glitch {
+    0%,
+    100% {
+      text-shadow: -2px -2px 0 red, 2px 2px 0 blue;
+    }
+    50% {
+      text-shadow: 2px -2px 0 cyan, -2px 2px 0 magenta;
+    }
+  }
+
+  /* Scan line animation for HUD elements */
+  @keyframes scan-lines {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 10px;
+    }
+  }
+
+  /* Shimmer glow for bioluminescent effect */
+  @keyframes shimmer-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.4), inset 0 0 20px rgba(0, 217, 255, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(0, 217, 255, 0.8), inset 0 0 20px rgba(0, 217, 255, 0.2);
+    }
+  }
+}
+
+@layer components {
+  /* Tactical glass morphism for card elements */
+  .tactical-glass {
+    @apply bg-slate-900/30 backdrop-blur-2xl border border-cyan-500/20 rounded-xl;
+  }
+
+  /* Holographic button base */
+  .tactical-button {
+    @apply relative font-space-mono font-bold text-sm uppercase tracking-wider py-3 px-6 rounded-lg
+           bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/50 
+           text-cyan-100 hover:text-cyan-50 transition-all duration-300
+           hover:shadow-lg hover:shadow-cyan-500/30 hover:border-cyan-300/80
+           active:scale-95 overflow-hidden;
+  }
+
+  /* Sonar pulse effect utility */
+  .sonar-pulse {
+    animation: sonar-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Radar sweep animation utility */
+  .radar-sweep {
+    animation: radar-sweep 3s linear infinite;
+  }
+  
+  /* Scan animation utility */
+  .animate-scan {
+    animation: scan 2s linear infinite;
+  }
+  
+  /* Shimmer animation utility */
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+  
+  /* Gradient animation utility */
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: animate-gradient 3s ease infinite;
+  }
+  
+  /* Slow spin animation */
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
+  }
+
+  /* HUD corner brackets for tactical feel */
+  .hud-corner {
+    position: relative;
+  }
+
+  .hud-corner::before,
+  .hud-corner::after {
+    content: "";
+    position: absolute;
+    border: 2px solid hsl(var(--accent));
+    pointer-events: none;
+  }
+
+  .hud-corner::before {
+    top: -8px;
+    left: -8px;
+    width: 12px;
+    height: 12px;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .hud-corner::after {
+    bottom: -8px;
+    right: -8px;
+    width: 12px;
+    height: 12px;
+    border-left: none;
+    border-top: none;
+  }
+}
+
+@supports (font-variation-settings: normal) {
+  body {
+    font-family: var(--font-space-mono), system-ui, -apple-system;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-orbitron), system-ui, -apple-system;
+  }
+}

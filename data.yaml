@@ -1,0 +1,8 @@
+names:
+- submarine
+- auv
+- mines
+- divers
+nc: 4
+train: yolov11_dataset/images
+val: yolov11_dataset/images
