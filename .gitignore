@@ -61,13 +61,13 @@ temp/
 *.tmp
 *.temp
 
-# Model files (too large for git)
-*.pt
-*.ckpt
-*.onnx
-*.pth
-*.h5
-*.pb
+# Model files - Now tracked in git
+# *.pt
+# *.ckpt
+# *.onnx
+# *.pth
+# *.h5
+# *.pb
 
 # Data files
 Deep_Sea-NN-main/data/
@@ -79,4 +79,5 @@ detection/*.json
 *.egg-info/
 dist/
 build/
+
 
