@@ -33,6 +33,17 @@
 
 ---
 
+<img width="1505" height="751" alt="image" src="https://github.com/user-attachments/assets/fb67f94f-9e54-4d2f-acce-8d769923acd6" />
+
+<img width="1500" height="762" alt="image" src="https://github.com/user-attachments/assets/ce1906b6-5b9e-418e-a315-78f9600d42f5" />
+
+<img width="1506" height="750" alt="image" src="https://github.com/user-attachments/assets/cf6f7afb-3e2d-4ab2-9437-029a6876e80d" />
+
+<img width="1502" height="756" alt="image" src="https://github.com/user-attachments/assets/e22bbeba-fa46-4e39-81d3-91fb421139c4" />
+
+
+
+
 ## 🎯 Overview
 
 **MarEye** is a comprehensive, production-ready marine security platform that combines cutting-edge AI technologies to provide:
